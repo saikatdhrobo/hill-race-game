@@ -340,8 +340,17 @@ ridgeline-rally/
 
 ## Contributors
 
+<a href="https://github.com/saikatdhrobo">
+  <img src="https://github.com/saikatdhrobo.png" width="55" height="55" style="border-radius: 50%; vertical-align: middle; margin-right: 8px;" alt="Jakaria Saikat Dhrobo" />
+</a>
+<a href="https://github.com/google">
+  <img src="https://avatars.githubusercontent.com/u/1342004?v=4" width="55" height="55" style="border-radius: 50%; vertical-align: middle; margin-left: 8px;" alt="Google DeepMind / Antigravity" />
+</a>
+
+<br/><br/>
+
 - **[Jakaria Saikat Dhrobo](https://github.com/saikatdhrobo)** — Creator & Developer
-- **[Antigravity](https://github.com/google)** (by Google DeepMind) — AI Co-developer & DevOps contributor
+- **[Google / Antigravity](https://github.com/google)** (by Google DeepMind) — AI Co-developer & DevOps contributor
 
 ---
 
