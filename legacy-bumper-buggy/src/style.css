@@ -1,0 +1,632 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #56c2ff;
+  font-family: 'Nunito', 'Fredoka', 'SF Pro Rounded', ui-rounded, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  touch-action: none;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ===========================
+   Minimalist Rounded Toy HUD
+   =========================== */
+.hud {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hud-left,
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hud-right {
+  justify-content: flex-end;
+}
+
+.pill {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 7px 16px 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  box-shadow: 0 6px 0 rgba(20, 62, 110, 0.14), 0 8px 20px rgba(15, 45, 85, 0.12);
+  border: 2.5px solid #ffffff;
+  transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pill.pop {
+  transform: scale(1.14);
+}
+
+.coin-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ffe259, #ffa719);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 -2px 0 rgba(185, 102, 0, 0.45);
+  text-shadow: 0 1px 2px rgba(150, 80, 0, 0.45);
+}
+
+.pill-value {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1e2f4d;
+  letter-spacing: -0.02em;
+}
+
+.distance-pill {
+  padding: 6px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  border-radius: 20px;
+}
+
+.distance-main {
+  font-size: 21px;
+  font-weight: 900;
+  color: #163052;
+  line-height: 1.05;
+}
+
+.distance-main small {
+  font-size: 14px;
+  font-weight: 800;
+  color: #4f6b8f;
+  margin-left: 2px;
+}
+
+.distance-sub {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #6b84a3;
+  letter-spacing: 0.04em;
+}
+
+.zone-chip {
+  background: rgba(24, 58, 102, 0.62);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Fuel & Nitro Gauges */
+.gauges-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 6px 0 rgba(20, 62, 110, 0.14), 0 8px 20px rgba(15, 45, 85, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gauge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gauge-icon {
+  font-size: 15px;
+  line-height: 1;
+  width: 18px;
+  text-align: center;
+}
+
+.bar-track {
+  width: 116px;
+  height: 12px;
+  background: #e3ecf5;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 3px rgba(15, 35, 65, 0.12);
+}
+
+.bar-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  transition: width 0.08s linear, background-color 0.2s ease;
+}
+
+.fuel-fill {
+  background: linear-gradient(90deg, #2ecc71, #6be854);
+}
+
+.fuel-fill.warn {
+  background: linear-gradient(90deg, #ff3f34, #ff9f1a);
+}
+
+.nitro-fill {
+  background: linear-gradient(90deg, #00c6ff, #1e82ff);
+}
+
+.hud-actions {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2.5px solid #ffffff;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 5px 0 rgba(20, 62, 110, 0.15);
+  font-size: 18px;
+  color: #1c3557;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+}
+
+.icon-btn:active {
+  transform: translateY(3px);
+}
+
+/* Alerts & Stunt Toasts */
+.low-fuel-banner {
+  position: absolute;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff3b3b;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 6px 16px rgba(255, 59, 59, 0.45);
+  animation: pulseAlert 0.65s infinite alternate;
+  pointer-events: none;
+  z-index: 12;
+}
+
+@keyframes pulseAlert {
+  from {
+    transform: translateX(-50%) scale(0.96);
+  }
+  to {
+    transform: translateX(-50%) scale(1.07);
+  }
+}
+
+.stunt-toast {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ffcf24, #ff8c1a);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 8px 22px rgba(255, 136, 0, 0.38);
+  text-shadow: 0 2px 3px rgba(145, 65, 0, 0.35);
+  pointer-events: none;
+  z-index: 12;
+  animation: popToast 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popToast {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px) scale(0.72);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* ===================================================
+   Mobile Touch Pedals (Appear ONLY on Touch Devices)
+   =================================================== */
+.touch-controls {
+  display: none;
+  position: absolute;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: max(18px, env(safe-area-inset-left));
+  right: max(18px, env(safe-area-inset-right));
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 15;
+}
+
+body.is-touch .touch-controls.active {
+  display: flex;
+}
+
+.pedal-zone {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.pedal-btn {
+  width: 112px;
+  height: 92px;
+  border-radius: 28px;
+  border: 3.5px solid #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #ffffff;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(16, 40, 72, 0.25), 0 12px 24px rgba(0, 0, 0, 0.22);
+  transition: transform 0.07s ease, box-shadow 0.07s ease;
+}
+
+.brake-pedal {
+  background: linear-gradient(180deg, #ff6b6b 0%, #ee3f3f 100%);
+}
+
+.gas-pedal {
+  background: linear-gradient(180deg, #4cd137 0%, #2bb824 100%);
+}
+
+.pedal-btn.pressed,
+.pedal-btn:active {
+  transform: translateY(5px) scale(0.97);
+  box-shadow: 0 3px 0 rgba(16, 40, 72, 0.25), 0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+.pedal-arrow {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.pedal-label {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.nitro-touch-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  background: linear-gradient(145deg, #24d2ff, #1769ff);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 0 rgba(16, 40, 72, 0.24), 0 10px 20px rgba(23, 105, 255, 0.35);
+  cursor: pointer;
+}
+
+.nitro-touch-btn span {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+.nitro-touch-btn.pressed,
+.nitro-touch-btn:active {
+  transform: translateY(4px) scale(0.96);
+}
+
+/* ===================================
+   Start & Game Over Rounded Cards
+   =================================== */
+.overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 48, 92, 0.28);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 25;
+}
+
+.modal-card {
+  width: min(440px, 100%);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 34px;
+  padding: 28px 26px 24px;
+  text-align: center;
+  border: 4px solid #ffffff;
+  box-shadow: 0 16px 0 rgba(17, 56, 104, 0.18), 0 24px 48px rgba(10, 35, 70, 0.28);
+  animation: cardBounceIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardBounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toy-tag {
+  display: inline-block;
+  background: #e6f4ff;
+  color: #1677ff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.game-title {
+  margin: 0;
+  font-size: clamp(32px, 6vw, 42px);
+  font-weight: 900;
+  color: #153052;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.game-subtitle {
+  margin: 10px auto 18px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: #4b6587;
+  max-width: 36ch;
+}
+
+.mode-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.mode-pill {
+  padding: 9px 12px;
+  border-radius: 16px;
+  border: 2px solid #dce8f5;
+  background: #f4f8fc;
+  color: #3f5b7d;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.mode-pill:hover {
+  border-color: #9dcaff;
+}
+
+.mode-pill.active {
+  background: #1e82ff;
+  border-color: #1e82ff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(30, 130, 255, 0.32);
+}
+
+.primary-play-btn {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 22px;
+  border: none;
+  background: linear-gradient(180deg, #4cd137 0%, #29b31e 100%);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 7px 0 #1d8714, 0 12px 24px rgba(41, 179, 30, 0.35);
+  transition: transform 0.09s ease, box-shadow 0.09s ease;
+}
+
+.primary-play-btn:hover {
+  filter: brightness(1.03);
+}
+
+.primary-play-btn:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 #1d8714, 0 6px 12px rgba(41, 179, 30, 0.25);
+}
+
+.controls-hint {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #657f9e;
+}
+
+body.is-touch .controls-hint {
+  display: none;
+}
+
+kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eef3f9;
+  border: 1px solid #cddaea;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  color: #233b5c;
+}
+
+/* Game Over specifics */
+.gameover-badge {
+  display: inline-block;
+  background: #ffe8e8;
+  color: #e63535;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.gameover-title {
+  margin: 0 0 16px;
+  font-size: 30px;
+  font-weight: 900;
+  color: #153052;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-box {
+  background: #f3f8fd;
+  border: 2px solid #e1ecf7;
+  border-radius: 18px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 900;
+  color: #6e86a6;
+  letter-spacing: 0.06em;
+}
+
+.stat-num {
+  font-size: 20px;
+  font-weight: 900;
+  color: #163052;
+}
+
+.gold-text {
+  color: #e89500;
+}
+
+.record-pill {
+  background: linear-gradient(90deg, #ffcf24, #ffa800);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 7px 16px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 16px;
+  text-shadow: 0 1px 2px rgba(145, 75, 0, 0.35);
+}
+
+/* Mobile compact layout */
+@media (max-width: 640px) {
+  .zone-chip {
+    display: none;
+  }
+
+  .bar-track {
+    width: 84px;
+    height: 10px;
+  }
+
+  .pill {
+    padding: 5px 12px 5px 8px;
+  }
+
+  .pill-value,
+  .distance-main {
+    font-size: 18px;
+  }
+
+  .pedal-btn {
+    width: 98px;
+    height: 82px;
+    border-radius: 24px;
+  }
+
+  .nitro-touch-btn {
+    width: 64px;
+    height: 64px;
+  }
+}
