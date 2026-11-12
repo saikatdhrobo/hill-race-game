@@ -338,6 +338,13 @@ ridgeline-rally/
 
 ---
 
+## Contributors
+
+- **[Jakaria Saikat Dhrobo](https://github.com/saikatdhrobo)** — Creator & Developer
+- **[Antigravity](https://github.com/google)** (by Google DeepMind) — AI Co-developer & DevOps contributor
+
+---
+
 ## Credits
 
 Design, code, procedural art and procedural audio made for this project. No
